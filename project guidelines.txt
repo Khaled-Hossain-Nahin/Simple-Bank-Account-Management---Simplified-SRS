@@ -1,0 +1,38 @@
+Simple Bank Account Management - Simplified SRS
+
+1. Introduction 
+This program is designed to manage simple bank accounts. 
+It tracks account details, including balances from multiple transaction types, 
+and provides functionality to compute the total account balance.
+
+2. Data Model (Structure & Multi-dimensional Array)
+A struct BankAccount will be used to store data for each account.
+char account_number[15]; (Unique account number)
+char account_holder_name[50]; (Name of the account holder)
+double opening_balance; (Initial balance when the account was opened)
+double transaction_amounts[3]; (A double array to store amounts of the last 3 transactions (positive for deposit, negative for withdrawal). 
+This acts as a multi-dimensional array when used within an array of struct BankAccount.)
+
+
+3. Program Functionality (Menu & Tasks) 
+The program will display a text-based menu with the following options, each implemented as a separate function:
+Load Records: Read existing bank account records from accounts.txt into memory.
+Save Records: Write all current bank account records from memory to accounts.txt.
+Add New Account: Prompt for account number, holder name, opening balance, and 3 transaction amounts, then add to the records.
+View All Accounts: Display details (Account Number, Holder Name, Opening Balance, and all 3 Transaction Amounts) for all registered accounts.
+Search Account: Prompt for an Account Number and display that account's details if found.
+Calculate Current Balance: For each account, calculate and display its current balance (opening balance + sum of transaction_amounts).
+Exit Program: Terminate the application.
+
+4. File I/O Specification
+Data will be stored in accounts.txt.
+Each account record should be on a new line.
+Data fields should be separated by a chosen delimiter (e.g., comma, tab) in a consistent order (e.g., AccountNumber, AccountHolderName, OpeningBalance, 
+Transaction1Amount, Transaction2Amount, Transaction3Amount).
+
+
+5. Constraints & Notes
+The application must be console-based (text-only UI).
+Estimated code size: 200-400 lines.
+Emphasis on using struct, char arrays (strings), double arrays (multi-dimensional concept), functions`, and file I/O.
+
