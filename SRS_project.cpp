@@ -25,6 +25,8 @@ using namespace std;
     const char *B_CYAN = "\033[1;36m";
     const char *B_WHITE = "\033[1;37m";
 
+bool Program_running=true;
+
 //---------------------------------Creating the position of the cursor----------------------------------------------
 void set_position(int x,int y)
 {
@@ -33,6 +35,103 @@ void set_position(int x,int y)
     axis.Y= y;//row
 
     SetConsoleCursorPosition (GetStdHandle(STD_OUTPUT_HANDLE),axis);
+}
+
+void load_Records()
+{
+
+}
+void save_records()
+{
+    
+}
+
+int main_menu()
+{
+    system("cls");
+    int button =1;
+    while(true)
+    {
+        set_position(20,4);
+            cout<<B_CYAN;
+            cout<<"======================Thanks for chosing Mugdha Bank Ltd.======================"<<RESET;
+        set_position(48,7);
+            cout << "Manage your account";
+
+        set_position(48,8);
+            if (button==1)
+                cout <<BLUE<<"1."<<RESET<<"Load Records"<<BLUE<<"<--"<<RESET;
+            else
+                cout <<BLUE<<"1."<<RESET<<"Load Records";
+        
+        set_position(48,9);
+            if (button==2)
+                cout <<BLUE<<"2."<<RESET<<"Save Records"<<BLUE<<"<--"<<RESET;
+            else
+                cout <<BLUE<<"2."<<RESET<<"Save Records";
+        
+        set_position(48,10);
+            if (button==3)
+                cout <<BLUE<<"3."<<RESET<<"Add New Account"<<BLUE<<"<--"<<RESET;
+            else
+                cout <<BLUE<<"3."<<RESET<<"Add New Account";
+
+        set_position(48,11);
+            if (button==4)
+                cout <<BLUE<<"4."<<RESET<<"View All Accounts"<<BLUE<<"<--"<<RESET;
+            else
+                cout <<BLUE<<"4."<<RESET<<"View All Accounts";
+        
+        set_position(48,12);
+            if (button==5)
+                cout <<BLUE<<"5."<<RESET<<"Search Account"<<BLUE<<"<--"<<RESET;
+            else
+                cout <<BLUE<<"5."<<RESET<<"Search Account";
+        
+        set_position(48,13);
+            if (button==6)
+                cout <<BLUE<<"6."<<RESET<<"Calculate Current Balance"<<BLUE<<"<--"<<RESET;
+            else
+                cout <<BLUE<<"6."<<RESET<<"Calculate Current Balance";
+        
+        set_position(48,14);
+            if (button==7)
+                cout <<BLUE<<"7."<<RESET<<"Exit Program"<<BLUE<<"<--"<<RESET;
+            else
+                cout <<BLUE<<"7."<<RESET<<"Exit Program";
+        
+        //Reads a Key from the keyboard
+        char key = _getch();
+            
+            if(key=='1') return 1;
+            if(key=='2') return 2;
+            if(key=='3') return 3;
+            if(key=='4') return 4;
+            if(key=='5') return 5;
+            if(key=='6') return 6;
+            if(key=='7') return 7;
+
+        if (key == 'w' || key == 'W')
+        {
+            if (button ==1) button = 7;
+            else button--;
+        }
+
+        else if (key == 's' || key == 'S')
+        {
+            if (button ==7) button = 1;
+            else button++;
+        }
+
+            //key 13 is equal to pressing Enter on keyboard and  other character is space
+        else if (key==13 || key == ' ')
+        {
+            return button;
+        }
+    }
+
+
+
 }
 
 //-------------------------The main Game Function------------------------------------------------------------------
@@ -47,6 +146,25 @@ int main()
     GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
     cursorInfo.bVisible = false;
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    system("cls");
+
+    int choice =1;
+    while (1)
+    {
+        choice = main_menu();
+        if (choice ==1 )
+        {
+            Program_running=true;
+            load_Records();
+
+        }
+
+        else if (choice ==2)
+        {
+            save_records();
+        }
+    }
+
 
 
 
