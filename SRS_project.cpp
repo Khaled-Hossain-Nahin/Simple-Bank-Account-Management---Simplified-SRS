@@ -4,7 +4,7 @@
 
 using namespace std;
 
-//Colouring Text with ANSI Escape colours
+//Coloring Text with ANSCII Esacpe colors
     const char *RESET = "\033[0m";
     //0=darker shade
     const char *BLACK  = "\033[0;30m";
@@ -36,7 +36,36 @@ void set_position(int x,int y)
 
     SetConsoleCursorPosition (GetStdHandle(STD_OUTPUT_HANDLE),axis);
 }
+void loading_screen()
+{
+    system("cls");
 
+    set_position(35,6);
+        cout <<"          Welcome to Mugdha Bank LTD.";
+    
+    set_position(67,27);
+        cout<<"Please wait while the system is loading . . .\n";
+    
+    set_position(35,7);
+    for(int i=1; i<=50; i++)
+    {
+        Sleep(55);
+        cout <<B_GREEN;
+        printf("%c",219);
+        cout<<RESET;
+    }
+
+    system("cls");
+}
+
+typedef struct account_info
+{
+    char account_number[50];
+    char account_holder_name[109];
+    double opening_balance;
+    double transaction_amounts[3];
+
+}aci;
 void load_Records()
 {
 
@@ -45,6 +74,26 @@ void save_records()
 {
     
 }
+void add_new_accounts()
+{
+    
+}
+void view_all__accounts()
+{
+    
+}
+void search_account()
+{
+
+}
+void calculate_current_balance()
+{
+    
+}
+void exit_program()
+{
+
+}
 
 int main_menu()
 {
@@ -52,57 +101,57 @@ int main_menu()
     int button =1;
     while(true)
     {
+    system("cls");
         set_position(20,4);
             cout<<B_CYAN;
             cout<<"======================Thanks for chosing Mugdha Bank Ltd.======================"<<RESET;
         set_position(48,7);
-            cout << "Manage your account";
+            cout << "Manage your accounts";
 
         set_position(48,8);
             if (button==1)
-                cout <<BLUE<<"1."<<RESET<<"Load Records"<<BLUE<<"<--"<<RESET;
+                cout <<B_BLUE <<"1."<<RESET<<"Load Records"<<RED<<"<--"<<RESET;
             else
-                cout <<BLUE<<"1."<<RESET<<"Load Records";
+                cout <<B_BLUE<<"1."<<RESET<<"Load Records";
         
         set_position(48,9);
             if (button==2)
-                cout <<BLUE<<"2."<<RESET<<"Save Records"<<BLUE<<"<--"<<RESET;
+                cout <<B_BLUE<<"2."<<RESET<<"Save Records"<<B_RED<<"<--"<<RESET;
             else
-                cout <<BLUE<<"2."<<RESET<<"Save Records";
+                cout <<B_BLUE<<"2."<<RESET<<"Save Records";
         
         set_position(48,10);
             if (button==3)
-                cout <<BLUE<<"3."<<RESET<<"Add New Account"<<BLUE<<"<--"<<RESET;
+                cout <<B_BLUE<<"3."<<RESET<<"Add New Account"<<B_RED<<"<--"<<RESET;
             else
-                cout <<BLUE<<"3."<<RESET<<"Add New Account";
+                cout <<B_BLUE<<"3."<<RESET<<"Add New Account";
 
         set_position(48,11);
             if (button==4)
-                cout <<BLUE<<"4."<<RESET<<"View All Accounts"<<BLUE<<"<--"<<RESET;
+                cout <<B_BLUE<<"4."<<RESET<<"View All Accounts"<<B_RED<<"<--"<<RESET;
             else
-                cout <<BLUE<<"4."<<RESET<<"View All Accounts";
+                cout <<B_BLUE<<"4."<<RESET<<"View All Accounts";
         
         set_position(48,12);
             if (button==5)
-                cout <<BLUE<<"5."<<RESET<<"Search Account"<<BLUE<<"<--"<<RESET;
+                cout <<B_BLUE<<"5."<<RESET<<"Search Account"<<B_RED<<"<--"<<RESET;
             else
-                cout <<BLUE<<"5."<<RESET<<"Search Account";
+                cout <<B_BLUE<<"5."<<RESET<<"Search Account";
         
         set_position(48,13);
             if (button==6)
-                cout <<BLUE<<"6."<<RESET<<"Calculate Current Balance"<<BLUE<<"<--"<<RESET;
+                cout <<B_BLUE<<"6."<<RESET<<"Calculate Current Balance"<<B_RED<<"<--"<<RESET;
             else
-                cout <<BLUE<<"6."<<RESET<<"Calculate Current Balance";
+                cout <<B_BLUE<<"6."<<RESET<<"Calculate Current Balance";
         
         set_position(48,14);
             if (button==7)
-                cout <<BLUE<<"7."<<RESET<<"Exit Program"<<BLUE<<"<--"<<RESET;
+                cout <<B_BLUE<<"7."<<RESET<<"Exit Program"<<B_RED<<"<--"<<RESET;
             else
-                cout <<BLUE<<"7."<<RESET<<"Exit Program";
+                cout <<B_BLUE<<"7."<<RESET<<"Exit Program";
         
         //Reads a Key from the keyboard
         char key = _getch();
-            
             if(key=='1') return 1;
             if(key=='2') return 2;
             if(key=='3') return 3;
@@ -123,21 +172,14 @@ int main_menu()
             else button++;
         }
 
-            //key 13 is equal to pressing Enter on keyboard and  other character is space
-        else if (key==13 || key == ' ')
-        {
-            return button;
-        }
+        //key 13 is equal to pressing Enter on keyboard and  other character is space
+        else if (key==13 || key == ' ') return button;
     }
-
-
-
 }
 
 //-------------------------The main Game Function------------------------------------------------------------------
 int main()
 {
-
     //Cursor Hiding: It retrieves the current console cursor settings,
     //sets the bVisible flag within the cursorInfo structure to false,
     //and then applies the change. This hides the annoying blinking cursor from the user,
@@ -146,9 +188,11 @@ int main()
     GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
     cursorInfo.bVisible = false;
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    
     system("cls");
-
+    loading_screen();
     int choice =1;
+    
     while (1)
     {
         choice = main_menu();
@@ -156,17 +200,39 @@ int main()
         {
             Program_running=true;
             load_Records();
-
         }
 
         else if (choice ==2)
         {
             save_records();
         }
+      
+        else if (choice ==3)
+        {
+            add_new_accounts();
+        }
+       
+        else if (choice ==4)
+        {
+            view_all__accounts();
+        }
+        
+        else if (choice ==5)
+        {
+            search_account();
+        }
+        
+        else if (choice==6)
+        {
+            calculate_current_balance();
+        }
+       
+        else if (choice==7)
+        {
+            break;
+        }
+
     }
-
-
-
 
     //hides the annoying cursor
     cursorInfo.bVisible = true;
