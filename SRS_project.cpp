@@ -216,36 +216,33 @@ void view_all__accounts(){
         set_position(42,11);
             cout <<RED<<"Failed! Add accounts first to view added accounts!"<<RESET;
         
-        set_position(62,27);
-            cout <<RESET<<"Press any button on the keyboard to return to main menu"<<RESET;
         _getch();
     }
-
-
+    
+    int row=10; 
     for (int i=0;i<account_counter;i++)
     {   
         
+        set_position(30,row++);
             cout << B_BLUE<<"=======================Added Accounts=======================\n"<<RESET;
         
-        
+        set_position(42,row++);
             cout <<"Account Number: "<<accounts_info[i].account_number<<"\n";
         
-        //set_position(42,13+i);
+        set_position(42,row++);
             cout <<"Account Name: "<<accounts_info[i].account_name<<"\n";
 
-        //set_position(42,14+i);
-            cout <<"Account's Opening Balance: "<<accounts_info[i].opening_balance<<"\n";
+        set_position(42,row++);
+            cout <<"Account's Opening Balance: "<<YELLOW<<accounts_info[i].opening_balance<<RESET<<"\n";
         
         for (int j=0 ;j<3;j++)
         {
-            //set_position(42,15+j);
-            cout <<"Transaction no "<<j+1 <<": "<<accounts_info[i].transaction_amounts[j]<<endl;
+            set_position(42,row++);
+            cout <<"Transaction no "<<j+1 <<": "<<YELLOW<<accounts_info[i].transaction_amounts[j]<<RESET<<endl;
         }
         
     }
 
-    set_position(62,27);
-        cout <<RESET<<"Press any button on the keyboard to return to main menu"<<RESET;
     _getch();
 }
 /*Search Account: Prompt for an Account Number and display that account's
@@ -254,41 +251,49 @@ void search_account() {
     system("cls");
     string s; //s-->Account number
     
-    //set_position(42,11);
-        cout <<CYAN <<"======================Search Section======================\n"<<RESET;
-    //set_position(42,12);
+    set_position(30,9);
+        cout <<B_BLUE <<"======================Search Section======================\n"<<RESET;
+
+    set_position(42,10);
         cout <<"Enter your account number: ";
         cin >> s;
     cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+    int row=11;
     for (int i=0;i<account_counter;i++)
     {
         if (accounts_info[i].account_number == s)
         {
-            //set_position(42,13);
+            set_position(42,row++);
                 cout <<"Search Results: \n";
-            //set_position(42,14);
+
+            set_position(42,row++);
                 cout << "Account Number: "<<accounts_info[i].account_number<<"\n";
-            //set_position(42,15);
+
+            set_position(42,row++);
                 cout <<"Account Name: "<<accounts_info[i].account_name<<"\n";
-            //set_position(42,14);
-                cout <<"Account's Opening Balance: "<<accounts_info[i].opening_balance<<"\n";
-            //set_position(42,15);
+
+            set_position(42,row++);
+                cout  <<"Account's Opening Balance: "<<YELLOW<<accounts_info[i].opening_balance<<RESET<<"\n";
+
+            set_position(42,row++);
                 cout <<"3 Transactions: \n";
+
             for (int j=0 ;j<3;j++)
             {
-                //set_position(42,16+j);
-                    cout <<"Transaction no "<<j+1 <<": "<<accounts_info[i].transaction_amounts[j]<<"\n";
+            set_position(42,row++);
+                    cout <<"Transaction no "<<j+1 <<": "<<YELLOW<<accounts_info[i].transaction_amounts[j]<<RESET<<"\n";
             }
             set_position(62,27);
-                cout <<RESET<<"Press any button on the keyboard to return to main menu"<<RESET;
+                cout <<B_WHITE<<"Press any button on the keyboard to return to main menu"<<RESET;
+            
             _getch();
             return;
         }
     }
 
     //else
-    set_position(42,13);
-        cout <<"No results containing all your search terms were found.";
+    set_position(42,11);
+        cout<<RED <<"No results containing all your search terms were found."<<RESET;
     set_position(62,27);
         cout <<RESET<<"Press any button on the keyboard to return to main menu"<<RESET;
     _getch();
@@ -311,7 +316,7 @@ void calculate_current_balance() {
 
     set_position(30,8);
         cout<<B_YELLOW<<"==============Current Account Balance=============="<<RESET;
-        int row=10; 
+    int row=10; 
 
     for (int i=0;i<account_counter;i++)
     {
@@ -329,11 +334,9 @@ void calculate_current_balance() {
         set_position(42,row++);
             cout <<"Your Current Balance is: "<<YELLOW<<sum<<RESET;
 
-
+        row++;
     }
 
-    set_position(62,27);
-        cout<<"Press any button on the keyboard to return to main menu"<<RESET;
     _getch();
 }
 
