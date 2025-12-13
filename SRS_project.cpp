@@ -2,6 +2,11 @@
 #include <conio.h>
 #include <windows.h>
 
+//to fix the issue of using cin and getline
+#include <limits>
+using std::numeric_limits;
+using std::streamsize;
+
 using namespace std;
 
 //Coloring Text with ANSCII Esacpe colors
@@ -29,17 +34,16 @@ using namespace std;
 bool Program_running=true;
 
 //---------------------------------Creating the position of the cursor----------------------------------------------
-void set_position(int x,int y)
-{
+void set_position(int x,int y) {
     COORD axis;
     axis.X= x;//for the column
     axis.Y= y;//row
 
     SetConsoleCursorPosition (GetStdHandle(STD_OUTPUT_HANDLE),axis);
 }
-void loading_screen()
-{
-    system("cls");
+
+//----------------------------------------------Just for Fun--------------------------------------------------------
+void loading_screen() {
 
     set_position(35,6);
     cout <<"          Welcome to Mugdha Bank LTD.";
@@ -59,26 +63,27 @@ void loading_screen()
     system("cls");
 }
 
-struct account_info
-{
+//----------------------------------------Struct to store the data--------------------------------------------------
+struct account_info {
     string account_number;
     string account_name;
     double opening_balance;
     double transaction_amounts[3];
 };
-int max_info=110;
-account_info accounts_info[max_info];
 
-//to count the number of accounts added
-int account_counter=0;
+//structs ints
+    int max_info=110;
+    account_info accounts_info[110];
+    //to count the number of accounts added
+    int account_counter=0;
+;
 
-
+/*Load Records: Read existing bank account records from accounts.txt into memory.*/
 void load_Records() {
     system("cls");
     ifstream file("accounts.txt");
 
-
-    if (!file.is_open())
+    if (!file)
     {
         set_position(20,3);
         cout<<RED << "Add & Save Records before loading them"<<RESET;
@@ -87,112 +92,252 @@ void load_Records() {
     }
 
     account_counter = 0;
-    while (1)
+    while (file >> accounts_info[account_counter].account_number)
     {
-        account_info file_data;
+        file.ignore();
+        getline(file, accounts_info[account_counter].account_name);
+        file >> accounts_info[account_counter].opening_balance;
 
-        if (!(file >> file_data.account_number))
-            break; 
-        file.ignore();  //to ignore \n
-
-       
-        file.getline(file_data.account_name, 109);
-        
-        
-        file >> file_data.opening_balance;
-        
         for (int i = 0; i < 3; i++)
-            file >> file_data.transaction_amounts[i];
+            file >> accounts_info[account_counter].transaction_amounts[i];
 
-        // add record to array
-        accounts_info[account_counter++] = file_data;
+        account_counter++;
+    }    
+    file.close();
+
+    set_position(42,11);
+        cout <<GREEN<<"Account Records Loaded Successfully!!";
+    
+    set_position(62,27);
+        cout <<RESET<<"Press any button on the keyboard to return to main menu"<<RESET;
+    _getch();
+}
+
+/*Save Records: Write all current bank account records from memory to accounts.txt.*/
+void save_records() {
+    system("cls");
+    ofstream file("accounts.txt");
+
+    if (!file.is_open())
+    {
+        set_position(20,3);
+            cout<<RED<<"Failed to open file to save!!"<<RESET;
+            _getch();
+            return;
+    }
+    
+    for (int i=0;i<account_counter;i++)
+    {
+        file << accounts_info[i].account_number << "\n";
+        file << accounts_info[i].account_name << "\n";
+        file << accounts_info[i].opening_balance << "\n";
+        
+        for (int j=0;j<3;j++)
+        {
+            file << accounts_info[i].transaction_amounts[j] << " ";
+        }
+        file <<"\n";
     }
 
     file.close();
+    set_position(42,11);
+        cout <<GREEN<<"You have saved your records!"<<RESET;
     
-    set_position(67,27);
-        cout <<RED<<"Press any button on the keyboard to return to main menu"<<RESET;
-
+    set_position(62,27);
+        cout <<RESET<<"Press any button on the keyboard to return to main menu"<<RESET;
     _getch();
+    return;
 
 
 }
 
-void save_records() {
-    /*Save Records: Write all current bank account records from memory to accounts.txt.*/
-}
-
-void add_new_accounts()
-{
-    /*Add New Account: Prompt for account number, holder name, opening balance, 
+void add_new_accounts() {
+    /*Add New Account: Prompt for account number, holder name, opening balance,
     and 3 transaction amounts, then add to the records.*/
     system("cls");
-    
+
     if (account_counter>=max_info)
     {
         cout <<RED<<"You can not add anymore."<<RESET;
         _getch();
         return;
     }
-    
-    account_info &file_data =accounts_info[account_counter];
-    
+
+    account_info &fileData =accounts_info[account_counter];
+
     set_position(20,3);
         cout<<CYAN<<"======================Add New Account======================"<<RESET;
-    
-    
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');//to clear buffer
     set_position(20,4);
         cout <<"Enter your account name: ";
-        getline(cin, file_data.account_name);
-        
-    cin.ignore();
+        getline(cin, fileData.account_name);
+
     set_position(20,5);
         cout <<"Enter your account number: ";
-        cin >>file_data.account_number;
-    
+        cin >>fileData.account_number;
+
     set_position(20,6);
         cout <<"Enter opening balance: ";
-        cin >>file_data.opening_balance;
+        cin >>fileData.opening_balance;
 
     set_position(20,7);
         cout <<"Enter 3 transaction amounts: ";
         for (int i=0;i<3;i++)
-            cin >>file_data.transaction_amounts[i];
-    account_counter++;
+        {
+            set_position(20,8+i);
+            cout <<"Transaction no "<<i+1<<": ";
+            cin >>fileData.transaction_amounts[i];
+        }
     
-    set_position(20,8);
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    account_counter++;
+
+    system("cls");
+    set_position(25,8);
         cout <<GREEN<<"You have successfully added the accounts!!"<<RESET;
 
-    
-    set_position(67,27);
-        cout <<RED<<"Press any button on the keyboard to return to main menu"<<RESET;
 
-    _getch();   
+    set_position(60,27);
+        cout<<"Press any button on the keyboard to return to main menu"<<RESET;
+
+    _getch();
 
     system("cls");
 }
 
-void view_all__accounts()
-{
-    /*View All Accounts: Display details (Account Number, Holder Name, 
-    Opening Balance, and all 3 Transaction Amounts) for all registered accounts.*/
+/*View All Accounts: Display details (Account Number, Holder Name,
+Opening Balance, and all 3 Transaction Amounts) for all registered accounts.*/
+void view_all__accounts(){
+    system("cls");
+
+    if (account_counter==0)
+    {
+        set_position(42,11);
+            cout <<RED<<"Failed! Add accounts first to view added accounts!"<<RESET;
+        
+        set_position(62,27);
+            cout <<RESET<<"Press any button on the keyboard to return to main menu"<<RESET;
+        _getch();
+    }
+
+
+    for (int i=0;i<account_counter;i++)
+    {   
+        
+            cout << B_BLUE<<"=======================Added Accounts=======================\n"<<RESET;
+        
+        
+            cout <<"Account Number: "<<accounts_info[i].account_number<<"\n";
+        
+        //set_position(42,13+i);
+            cout <<"Account Name: "<<accounts_info[i].account_name<<"\n";
+
+        //set_position(42,14+i);
+            cout <<"Account's Opening Balance: "<<accounts_info[i].opening_balance<<"\n";
+        
+        for (int j=0 ;j<3;j++)
+        {
+            //set_position(42,15+j);
+            cout <<"Transaction no "<<j+1 <<": "<<accounts_info[i].transaction_amounts[j]<<endl;
+        }
+        
+    }
+
+    set_position(62,27);
+        cout <<RESET<<"Press any button on the keyboard to return to main menu"<<RESET;
+    _getch();
+}
+/*Search Account: Prompt for an Account Number and display that account's
+details if found.*/
+void search_account() {
+    system("cls");
+    string s; //s-->Account number
+    
+    //set_position(42,11);
+        cout <<CYAN <<"======================Search Section======================\n"<<RESET;
+    //set_position(42,12);
+        cout <<"Enter your account number: ";
+        cin >> s;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+    for (int i=0;i<account_counter;i++)
+    {
+        if (accounts_info[i].account_number == s)
+        {
+            //set_position(42,13);
+                cout <<"Search Results: \n";
+            //set_position(42,14);
+                cout << "Account Number: "<<accounts_info[i].account_number<<"\n";
+            //set_position(42,15);
+                cout <<"Account Name: "<<accounts_info[i].account_name<<"\n";
+            //set_position(42,14);
+                cout <<"Account's Opening Balance: "<<accounts_info[i].opening_balance<<"\n";
+            //set_position(42,15);
+                cout <<"3 Transactions: \n";
+            for (int j=0 ;j<3;j++)
+            {
+                //set_position(42,16+j);
+                    cout <<"Transaction no "<<j+1 <<": "<<accounts_info[i].transaction_amounts[j]<<"\n";
+            }
+            set_position(62,27);
+                cout <<RESET<<"Press any button on the keyboard to return to main menu"<<RESET;
+            _getch();
+            return;
+        }
+    }
+
+    //else
+    set_position(42,13);
+        cout <<"No results containing all your search terms were found.";
+    set_position(62,27);
+        cout <<RESET<<"Press any button on the keyboard to return to main menu"<<RESET;
+    _getch();
+    
 }
 
-void search_account()
-{
-    /*Search Account: Prompt for an Account Number and display that account's 
-    details if found.*/
+/*Calculate Current Balance: For each account, calculate and display
+ its current balance (opening balance + sum of transaction_amounts).*/
+void calculate_current_balance() {
+    system("cls");
+    if(account_counter==0)
+    {
+        set_position(42,11);
+            cout <<RED<<"Failed! Add accounts to calculate!"<<RESET;
+        set_position(62,27);
+            cout <<RESET<<"Press any button on the keyboard to return to main menu"<<RESET;
+        _getch();
+        return;
+    }
+
+    set_position(30,8);
+        cout<<B_YELLOW<<"==============Current Account Balance=============="<<RESET;
+        int row=10; 
+
+    for (int i=0;i<account_counter;i++)
+    {
+        double sum =accounts_info[i].opening_balance;
+
+        for (int j=0;j<3;j++)
+            sum+= accounts_info[i].transaction_amounts[j];
+
+        set_position(42,row++);
+            cout <<"Account Number: "<<accounts_info[i].account_number;
+        set_position(42,row++);
+            cout <<"Account Name: "<<accounts_info[i].account_name;
+        
+        //Total Balance
+        set_position(42,row++);
+            cout <<"Your Current Balance is: "<<YELLOW<<sum<<RESET;
+
+
+    }
+
+    set_position(62,27);
+        cout<<"Press any button on the keyboard to return to main menu"<<RESET;
+    _getch();
 }
 
-
-void calculate_current_balance()
-{
-    /*Calculate Current Balance: For each account, calculate and display 
-    its current balance (opening balance + sum of transaction_amounts).*/
-}
-
-int main_menu()
-{
+int main_menu() {
     system("cls");
     int button =1;
     while(true)
@@ -275,8 +420,7 @@ int main_menu()
 }
 
 //-------------------------The main Game Function------------------------------------------------------------------
-int main()
-{
+int main() {
     //Cursor Hiding: It retrieves the current console cursor settings,
     //sets the bVisible flag within the cursorInfo structure to false,
     //and then applies the change. This hides the annoying blinking cursor from the user,
