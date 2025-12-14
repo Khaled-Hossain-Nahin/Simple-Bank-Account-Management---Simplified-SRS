@@ -54,13 +54,11 @@ void loading_screen() {
     set_position(35,7);
     for(int i=1; i<=50; i++)
     {
-        Sleep(29);
-        cout <<B_GREEN;
-        printf("%c",219);
-        cout<<RESET;
+        cout <<B_BLUE<< (char)219<<RESET;
+        Sleep(20);
     }
 
-    system("cls");
+   system("cls");
 }
 
 //----------------------------------------Struct to store the data--------------------------------------------------
@@ -76,7 +74,7 @@ struct account_info {
     account_info accounts_info[110];
     //to count the number of accounts added
     int account_counter=0;
-;
+
 
 /*Load Records: Read existing bank account records from accounts.txt into memory.*/
 void load_Records() {
@@ -145,16 +143,22 @@ void save_records() {
     
     set_position(62,27);
         cout <<RESET<<"Press any button on the keyboard to return to main menu"<<RESET;
+
     _getch();
     return;
-
-
 }
 
 void add_new_accounts() {
     /*Add New Account: Prompt for account number, holder name, opening balance,
     and 3 transaction amounts, then add to the records.*/
     system("cls");
+
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+
+    cursorInfo.bVisible = true;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    
 
     if (account_counter>=max_info)
     {
@@ -168,7 +172,9 @@ void add_new_accounts() {
     set_position(20,3);
         cout<<CYAN<<"======================Add New Account======================"<<RESET;
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');//to clear buffer
+    //to clear buffer
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
     set_position(20,4);
         cout <<"Enter your account name: ";
         getline(cin, fileData.account_name);
@@ -183,26 +189,30 @@ void add_new_accounts() {
 
     set_position(20,7);
         cout <<"Enter 3 transaction amounts: ";
-        for (int i=0;i<3;i++)
-        {
-            set_position(20,8+i);
-            cout <<"Transaction no "<<i+1<<": ";
-            cin >>fileData.transaction_amounts[i];
-        }
+
+    for (int i=0;i<3;i++)
+    {
+        set_position(20,8+i);
+        cout <<"Transaction no "<<i+1<<": ";
+        cin >>fileData.transaction_amounts[i];
+    }
     
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
     account_counter++;
 
     system("cls");
-    set_position(25,8);
-        cout <<GREEN<<"You have successfully added the accounts!!"<<RESET;
 
+    set_position(42,11);
+        cout <<GREEN<<"You have successfully added the accounts!!"<<RESET;
 
     set_position(60,27);
         cout<<"Press any button on the keyboard to return to main menu"<<RESET;
 
-    _getch();
+    cursorInfo.bVisible = false;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 
+    _getch();
     system("cls");
 }
 
@@ -219,12 +229,12 @@ void view_all__accounts(){
         _getch();
     }
     
-    int row=10; 
+    set_position(20,3);
+        cout << B_BLUE<<"=======================View all Accounts=======================\n"<<RESET;
+
+    int row=5; 
     for (int i=0;i<account_counter;i++)
     {   
-        
-        set_position(30,row++);
-            cout << B_BLUE<<"=======================Added Accounts=======================\n"<<RESET;
         
         set_position(42,row++);
             cout <<"Account Number: "<<accounts_info[i].account_number<<"\n";
@@ -249,6 +259,13 @@ void view_all__accounts(){
 details if found.*/
 void search_account() {
     system("cls");
+
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+
+    cursorInfo.bVisible = true;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+
     string s; //s-->Account number
     
     set_position(30,9);
@@ -257,14 +274,16 @@ void search_account() {
     set_position(42,10);
         cout <<"Enter your account number: ";
         cin >> s;
+
     cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+
     int row=11;
     for (int i=0;i<account_counter;i++)
     {
         if (accounts_info[i].account_number == s)
         {
             set_position(42,row++);
-                cout <<"Search Results: \n";
+                cout <<"Search Result: \n";
 
             set_position(42,row++);
                 cout << "Account Number: "<<accounts_info[i].account_number<<"\n";
@@ -296,6 +315,10 @@ void search_account() {
         cout<<RED <<"No results containing all your search terms were found."<<RESET;
     set_position(62,27);
         cout <<RESET<<"Press any button on the keyboard to return to main menu"<<RESET;
+
+    cursorInfo.bVisible = false;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    
     _getch();
     
 }
@@ -304,20 +327,22 @@ void search_account() {
  its current balance (opening balance + sum of transaction_amounts).*/
 void calculate_current_balance() {
     system("cls");
+
     if(account_counter==0)
     {
         set_position(42,11);
             cout <<RED<<"Failed! Add accounts to calculate!"<<RESET;
         set_position(62,27);
             cout <<RESET<<"Press any button on the keyboard to return to main menu"<<RESET;
+
         _getch();
         return;
     }
 
     set_position(30,8);
         cout<<B_YELLOW<<"==============Current Account Balance=============="<<RESET;
-    int row=10; 
 
+    int row=10; 
     for (int i=0;i<account_counter;i++)
     {
         double sum =accounts_info[i].opening_balance;
@@ -337,12 +362,21 @@ void calculate_current_balance() {
         row++;
     }
 
+
     _getch();
 }
 
 int main_menu() {
     system("cls");
     int button =1;
+
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    
+    cursorInfo.bVisible = false;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+
+    
     while(true)
     {
         system("cls");
@@ -355,45 +389,45 @@ int main_menu() {
 
         set_position(48,8);
         if (button==1)
-            cout <<B_BLUE <<"1."<<RESET<<"Load Records"<<RED<<"<--"<<RESET;
+            cout <<CYAN <<"1."<<RESET<<"Load Records"<<CYAN<<"<--"<<RESET;
         else
-            cout <<B_BLUE<<"1."<<RESET<<"Load Records";
+            cout <<CYAN<<"1."<<RESET<<"Load Records";
 
         set_position(48,9);
         if (button==2)
-            cout <<B_BLUE<<"2."<<RESET<<"Save Records"<<B_RED<<"<--"<<RESET;
+            cout <<CYAN<<"2."<<RESET<<"Save Records"<<CYAN<<"<--"<<RESET;
         else
-            cout <<B_BLUE<<"2."<<RESET<<"Save Records";
+            cout <<CYAN<<"2."<<RESET<<"Save Records";
 
         set_position(48,10);
         if (button==3)
-            cout <<B_BLUE<<"3."<<RESET<<"Add New Account"<<B_RED<<"<--"<<RESET;
+            cout <<CYAN<<"3."<<RESET<<"Add New Account"<<CYAN<<"<--"<<RESET;
         else
-            cout <<B_BLUE<<"3."<<RESET<<"Add New Account";
+            cout <<CYAN<<"3."<<RESET<<"Add New Account";
 
         set_position(48,11);
         if (button==4)
-            cout <<B_BLUE<<"4."<<RESET<<"View All Accounts"<<B_RED<<"<--"<<RESET;
+            cout <<CYAN<<"4."<<RESET<<"View All Accounts"<<CYAN<<"<--"<<RESET;
         else
-            cout <<B_BLUE<<"4."<<RESET<<"View All Accounts";
+            cout <<CYAN<<"4."<<RESET<<"View All Accounts";
 
         set_position(48,12);
         if (button==5)
-            cout <<B_BLUE<<"5."<<RESET<<"Search Account"<<B_RED<<"<--"<<RESET;
+            cout <<CYAN<<"5."<<RESET<<"Search Account"<<CYAN<<"<--"<<RESET;
         else
-            cout <<B_BLUE<<"5."<<RESET<<"Search Account";
+            cout <<CYAN<<"5."<<RESET<<"Search Account";
 
         set_position(48,13);
         if (button==6)
-            cout <<B_BLUE<<"6."<<RESET<<"Calculate Current Balance"<<B_RED<<"<--"<<RESET;
+            cout <<CYAN<<"6."<<RESET<<"Calculate Current Balance"<<CYAN<<"<--"<<RESET;
         else
-            cout <<B_BLUE<<"6."<<RESET<<"Calculate Current Balance";
+            cout <<CYAN<<"6."<<RESET<<"Calculate Current Balance";
 
         set_position(48,14);
         if (button==7)
-            cout <<B_BLUE<<"7."<<RESET<<"Exit Program"<<B_RED<<"<--"<<RESET;
+            cout <<CYAN<<"7."<<RESET<<"Exit Program"<<CYAN<<"<--"<<RESET;
         else
-            cout <<B_BLUE<<"7."<<RESET<<"Exit Program";
+            cout <<CYAN<<"7."<<RESET<<"Exit Program";
 
         //Reads a Key from the keyboard
         char key = _getch();
@@ -446,37 +480,19 @@ int main() {
             Program_running=true;
             load_Records();
         }
+        else if (choice ==2) save_records();
 
-        else if (choice ==2)
-        {
-            save_records();
-        }
+        else if (choice ==3) add_new_accounts();
 
-        else if (choice ==3)
-        {
-            add_new_accounts();
-        }
+        else if (choice ==4) view_all__accounts();
 
-        else if (choice ==4)
-        {
-            view_all__accounts();
-        }
-
-        else if (choice ==5)
-        {
-            search_account();
-        }
-
-        else if (choice==6)
-        {
-            calculate_current_balance();
-        }
-
-        else if (choice==7)
-        {
-            break;
-        }
-
+        else if (choice ==5) search_account();
+            
+        else if (choice==6) calculate_current_balance();
+            
+        else if (choice==7) break;
     }
+    cursorInfo.bVisible = true;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
     return 0;
 }
