@@ -75,7 +75,6 @@ struct account_info {
     //to count the number of accounts added
     int account_counter=0;
 
-
 /*Load Records: Read existing bank account records from accounts.txt into memory.*/
 void load_Records() {
     system("cls");
@@ -96,7 +95,7 @@ void load_Records() {
         getline(file, accounts_info[account_counter].account_name);
         file >> accounts_info[account_counter].opening_balance;
 
-        for (int i = 0; i < 3; i++)
+        for (int i=0;i<3;i++)
             file >> accounts_info[account_counter].transaction_amounts[i];
 
         account_counter++;
@@ -126,9 +125,9 @@ void save_records() {
     
     for (int i=0;i<account_counter;i++)
     {
-        file << accounts_info[i].account_number << "\n";
-        file << accounts_info[i].account_name << "\n";
-        file << accounts_info[i].opening_balance << "\n";
+        file <<accounts_info[i].account_number << "\n";
+        file <<accounts_info[i].account_name << "\n";
+        file <<accounts_info[i].opening_balance << "\n";
         
         for (int j=0;j<3;j++)
         {
@@ -148,6 +147,8 @@ void save_records() {
     return;
 }
 
+/*Add New Account: Prompt for account number, holder name, opening balance, 
+and 3 transaction amounts, then add to the records.*/
 void add_new_accounts() {
     /*Add New Account: Prompt for account number, holder name, opening balance,
     and 3 transaction amounts, then add to the records.*/
@@ -250,7 +251,7 @@ void view_all__accounts(){
             set_position(42,row++);
             cout <<"Transaction no "<<j+1 <<": "<<YELLOW<<accounts_info[i].transaction_amounts[j]<<RESET<<endl;
         }
-        
+        row++;
     }
 
     _getch();
@@ -366,6 +367,27 @@ void calculate_current_balance() {
     _getch();
 }
 
+/*Delete existing account*/
+void delete_record(){
+
+    system("cls");
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    
+    cursorInfo.bVisible = true;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+
+    
+
+
+
+    
+    cursorInfo.bVisible = false;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    _getch();
+}
+
+/*Display the menu and to control it with w,s and numbers*/
 int main_menu() {
     system("cls");
     int button =1;
@@ -376,7 +398,6 @@ int main_menu() {
     cursorInfo.bVisible = false;
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 
-    
     while(true)
     {
         system("cls");
@@ -425,29 +446,36 @@ int main_menu() {
 
         set_position(48,14);
         if (button==7)
-            cout <<CYAN<<"7."<<RESET<<"Exit Program"<<CYAN<<"<--"<<RESET;
+            cout <<CYAN<<"7."<<RESET<<"Delete any Record"<<CYAN<<"<--"<<RESET;
         else
-            cout <<CYAN<<"7."<<RESET<<"Exit Program";
+            cout <<CYAN<<"7."<<RESET<<"Delete any Record";
+
+        set_position(48,15);
+        if (button==8)
+            cout <<CYAN<<"8."<<RESET<<"Exit Console"<<CYAN<<"<--"<<RESET;
+        else
+            cout <<CYAN<<"8."<<RESET<<"Exit Console";
 
         //Reads a Key from the keyboard
         char key = _getch();
-        if(key=='1') return 1;
-        if(key=='2') return 2;
-        if(key=='3') return 3;
-        if(key=='4') return 4;
-        if(key=='5') return 5;
-        if(key=='6') return 6;
-        if(key=='7') return 7;
+        if (key=='1') return 1;
+        if (key=='2') return 2;
+        if (key=='3') return 3;
+        if (key=='4') return 4;
+        if (key=='5') return 5;
+        if (key=='6') return 6;
+        if (key=='7') return 7;
+        if (key == '8') return 8;
 
         if (key == 'w' || key == 'W')
         {
-            if (button ==1) button = 7;
+            if (button ==1) button = 8;
             else button--;
         }
 
         else if (key == 's' || key == 'S')
         {
-            if (button ==7) button = 1;
+            if (button ==8) button = 1;
             else button++;
         }
 
@@ -489,8 +517,10 @@ int main() {
         else if (choice ==5) search_account();
             
         else if (choice==6) calculate_current_balance();
+
+        else if (choice==7) delete_record();
             
-        else if (choice==7) break;
+        else if (choice==8) break;
     }
     cursorInfo.bVisible = true;
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
